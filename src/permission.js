@@ -1,7 +1,7 @@
 import router from '@/router'
 import store from '@/store'
-import NProgress from 'nprogress' 
-import 'nprogress/nprogress.css' 
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 
 const whiteList = ['/login', '/404'] // 定义白名单  所有不受权限控制的页面
 
@@ -14,10 +14,14 @@ router.beforeEach(function(to, from, next) {
     if (to.path === '/login') {
       next('/')
     } else {
+      // 如果用户信息不存在的话 去 获取用户信息
+      if (!store.getters.userName) {
+        store.dispatch('user/getUserInfo')
+      }
       next()
     }
   } else {
-  // 没有token 判断是否在白名单
+    // 没有token 判断是否在白名单
     if (whiteList.indexOf(to.path) > -1) {
       // 在白名单内
       next()

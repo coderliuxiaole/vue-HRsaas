@@ -1,7 +1,7 @@
 <template>
   <div class="navbar">
     <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
-       <div class="app-breadcrumb">
+      <div class="app-breadcrumb">
       江苏传智播客教育科技股份有限公司
       <span class="breadBtn">体验版</span>
   </div>
@@ -11,8 +11,10 @@
     
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-        <img src="@/assets/common/bigUserHeader.png" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
+        <img v-imageError="errorImage" :src="userPhoto" class="user-avatar">
+          <span class="name">{{ userName }}</span>
+        <i class="style_username"/>
+          <i class="el-icon-caret-bottom"/> 
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
@@ -35,6 +37,11 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
 export default {
+  data () {
+    return {
+      errorImage: require('@/assets/common/head.jpg')
+    }
+  },
   components: {
     Breadcrumb,
     Hamburger
@@ -42,7 +49,9 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'avatar',
+      'userPhoto',
+      'userName'
     ])
   },
   methods: {
@@ -50,8 +59,9 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      await this.$store.dispatch('user/userLogout')
+      // 路由跳转
+      this.$router.push('/login')
     }
   }
 }

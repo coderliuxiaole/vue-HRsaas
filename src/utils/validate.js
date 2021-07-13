@@ -1,8 +1,4 @@
-/**
- * 表单验证规则 
- */
-
-/**
+/** 自定义手机号码校验规则
  * @param {string} path
  * @returns {Boolean}
  */
