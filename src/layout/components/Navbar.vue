@@ -1,20 +1,17 @@
 <template>
   <div class="navbar">
     <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
-      <div class="app-breadcrumb">
+    <div class="app-breadcrumb">
       江苏传智播客教育科技股份有限公司
       <span class="breadBtn">体验版</span>
-  </div>
-    <breadcrumb class="breadcrumb-container" />
-  
+    </div>
     <div class="right-menu">
-    
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-        <img v-imageError="errorImage" :src="userPhoto" class="user-avatar">
+          <img v-imageError="errorImage" :src="userPhoto" class="user-avatar">
           <span class="name">{{ userName }}</span>
-        <i class="style_username"/>
-          <i class="el-icon-caret-bottom"/> 
+          <i class="style_username" />
+          <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
@@ -33,19 +30,19 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
 export default {
-  data () {
+  components: {
+    Hamburger
+  },
+
+  data() {
     return {
       errorImage: require('@/assets/common/head.jpg')
     }
   },
-  components: {
-    Breadcrumb,
-    Hamburger
-  },
+
   computed: {
     ...mapGetters([
       'sidebar',
@@ -54,6 +51,7 @@ export default {
       'userName'
     ])
   },
+
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
@@ -84,6 +82,10 @@ export default {
     line-height: 30px;
     border-radius: 10px;
     margin-left: 15px;
+    cursor: pointer;
+    &:hover {
+      background: #5b8cff;
+    }
   }
 }
 .navbar {
@@ -115,7 +117,7 @@ export default {
     float: right;
     height: 100%;
     line-height: 50px;
-  
+
     &:focus {
       outline: none;
     }
@@ -144,7 +146,7 @@ export default {
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
-      
+
         .user-avatar {
            cursor: pointer;
           width: 30px;
