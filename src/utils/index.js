@@ -115,3 +115,23 @@ export function param2Obj(url) {
   })
   return obj
 }
+
+/*
+* 封装的递归函数
+**/
+export function tranListToTreeData(list, rootValue) {
+  var arr = []
+  list.forEach(item => {
+    // 如果找到则证明当前是父节点
+    if (item.pid === rootValue) {
+      // 接下来要去找子节点
+      const children = tranListToTreeData(list, item.id)
+      if (children.length) {
+        // 如果children的长度大于0 说明找到了子节点
+        item.children = children
+      }
+      arr.push(item) // 将内容加入到数组中
+    }
+  })
+  return arr
+}

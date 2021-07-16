@@ -15,16 +15,16 @@
       >
         <el-col>{{ treeNode.manager }}</el-col>
         <el-col>
-          <el-dropdown>
+          <el-dropdown @command="operateDepts">
             <span>
               操作<i class="el-icon-arrow-down" />
             </span>
 
             <!-- 下拉菜单 -->
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>添加子部门</el-dropdown-item>
-              <el-dropdown-item v-if="!isRoot">查看部门</el-dropdown-item>
-              <el-dropdown-item v-if="!isRoot">删除部门</el-dropdown-item>
+              <el-dropdown-item command="add">添加子部门</el-dropdown-item>
+              <el-dropdown-item v-if="!isRoot" command="edit">编辑部门</el-dropdown-item>
+              <el-dropdown-item v-if="!isRoot" command="del">删除部门</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </el-col>
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { delDepartmentsApi } from '@/api/departments'
 export default {
   name: 'VueHrsaasTreeTools',
   props: {
@@ -58,7 +59,31 @@ export default {
   },
 
   methods: {
+    async operateDepts(type) {
+      // 添加部门
+      if (type === 'add') {
+        this.$emit('addDepts', this.treeNode)
+      }
+      else if (type === 'edit') {
+        console.log(11)
+      }
 
+      else if (type === 'del') {
+        await this.$confirm('您确定要删除这个部门吗?')
+        // 捕获用户取消操作
+          .catch(() => {
+            console.log('用户取消了删除操作!')
+          })
+
+        // 调用删除组织api删除数据
+        delDepartmentsApi(this.treeNode.id)
+        // 删除成功才会到这里
+          .then(() => {
+            this.$emit('deleteOK')
+            this.$message.success('部门数据删除成功!')
+          })
+      }
+    }
   }
 }
 </script>
