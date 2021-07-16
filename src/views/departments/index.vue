@@ -2,34 +2,12 @@
   <div class="dashboard-container">
     <div class="app-container">
       <el-card class="box-card">
-        <el-row type="flex" justify="space-between">
-          <el-col>
-            <span>江苏传智播客教育科技股份有限公司</span>
-          </el-col>
-
-          <el-col :span="4">
-            <el-row type="flex" justify="end">
-              <el-col>负责人</el-col>
-              <el-col>
-                <el-dropdown>
-                  <span>
-                    操作<i class="el-icon-arrow-down" />
-                  </span>
-
-                  <!-- 下拉菜单 -->
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>添加子部门</el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
+        <tree-tools :tree-node="company" :is-root="true" />
         <!-- default-expand-all 是否默认展开所有节点 -->
         <!-- props 配置规则 data 数据 -->
         <el-tree :data="departs" :props="defaultProps" :default-expand-all="true">
           <!-- 在el-tree 的插槽中 slot-scope 接收作用域插槽传过来的值 然后解构data -->
-          <tree-tools slot-scope="{ data }" :tree-node="data" :is-root="true" />
+          <tree-tools slot-scope="{ data }" :tree-node="data" />
         </el-tree>
       </el-card>
     </div>
@@ -49,8 +27,8 @@ export default {
       defaultProps: {
         label: 'name'
       },
-      departs: [{ name: '总裁办', manager: '李志鹏', children: [{ name: '董事会', manager: '张三' }, { name: '行政部', manager: '李四' }] },
-        { name: '行政部', manager: '张三' }, { name: '人事部', manager: '李四' }]
+      company: { name: '', manager: '负责人' },
+      departs: []
     }
   },
 
@@ -68,6 +46,7 @@ export default {
     async getDepartments() {
       const result = await getDepartmentsApi()
       this.departs = result.depts
+      this.company.name = result.companyName
     }
   }
 }
