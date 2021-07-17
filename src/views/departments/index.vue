@@ -7,12 +7,12 @@
         <!-- props 配置规则 data 数据 -->
         <el-tree :data="departs" :props="defaultProps" :default-expand-all="true">
           <!-- 在el-tree 的插槽中 slot-scope 接收作用域插槽传过来的值 然后解构data -->
-          <tree-tools slot-scope="{ data }" :tree-node="data" @deleteOK="getDepartments" @addDepts="addDepts" />
+          <tree-tools slot-scope="{ data }" :tree-node="data" @deleteOK="getDepartments" @addDepts="addDepts" @editDepts="editDepts" />
         </el-tree>
       </el-card>
     </div>
     <!-- 新增部门的弹出层 -->
-    <add-dept :show-dialog.sync="showDialog" :tree-node="node" @addDepts="getDepartments" />
+    <add-dept ref="addDept" :show-dialog.sync="showDialog" :tree-node="node" @addDepts="getDepartments" />
   </div>
 </template>
 
@@ -53,7 +53,7 @@ export default {
     // 调用获取组织架构信息接口
     async getDepartments() {
       const result = await getDepartmentsApi()
-      this.company = { name: result.companyName, manager: '负责人', id: ''}
+      this.company = { name: result.companyName, manager: '负责人', id: '' }
       this.departs = tranListToTreeData(result.depts, '')
     },
 
@@ -61,6 +61,15 @@ export default {
       // 显示弹层
       this.showDialog = true
       this.node = node
+    },
+
+    editDepts(node) {
+      // 显示弹层
+      this.showDialog = true
+      this.node = node
+
+      // 调用子组件中的函数 获取数据
+      this.$refs.addDept.getDepartDetail(node.id)
     }
   }
 }

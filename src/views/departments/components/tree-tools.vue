@@ -60,16 +60,14 @@ export default {
 
   methods: {
     async operateDepts(type) {
-      // 添加部门
       if (type === 'add') {
+        // 添加部门
         this.$emit('addDepts', this.treeNode)
-      }
-      else if (type === 'edit') {
-        console.log(11)
-      }
-
-      else if (type === 'del') {
-        await this.$confirm('您确定要删除这个部门吗?')
+      } else if (type === 'edit') {
+        // 编辑部门
+        this.$emit('editDepts', this.treeNode)
+      } else if (type === 'del') {
+        this.$confirm('您确定要删除这个部门吗?')
         // 捕获用户取消操作
           .catch(() => {
             console.log('用户取消了删除操作!')
