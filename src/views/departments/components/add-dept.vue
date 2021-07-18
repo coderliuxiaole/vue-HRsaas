@@ -48,15 +48,28 @@ export default {
   data() {
     // 校验部门名称
     const checkNameRepeat = async(rule, value, callback) => {
-      const { depts } = await getDepartmentsApi()
-      const isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === value)
-      isRepeat ? callback(new Error(`同级部门下已经存在这个${value}部门了`)) : callback()
+    const { depts } = await getDepartmentsApi()
+    var isRepeat = false
+      if (this.formData.id) {
+        // 如果有的话就是编辑模式
+          isRepeat = depts.filter(item => item.id !== this.formData.id && item.pid === this.treeNode.pid).some(item => item.name === value)
+      } else {
+        // 如果没有的话就是新增模式
+        const { depts } = await getDepartmentsApi()
+        isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === value)
+      }
+        isRepeat ? callback(new Error(`同级部门下已经存在这个${value}部门了`)) : callback()
     }
 
     // 校验部门编码
     const checkCodeRepeat = async(rule, value, callback) => {
       const { depts } = await getDepartmentsApi()
-      const isRepeat = depts.some(item => item.code === value && value)
+      let isRepeat = false
+      if (this.formData.id) {
+        isRepeat = depts.some(item => item.id !== this.formData.id && item.code === value && value)
+      } else {
+        isRepeat = depts.some(item => item.code === value && value)
+      }
       isRepeat ? callback(new Error(`同级部门下已经存在这个${value}编码了`)) : callback()
     }
     return {
