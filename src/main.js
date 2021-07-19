@@ -15,9 +15,20 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+// 全局注册组件
+import Component from '@/components'
+Vue.use(Component)
+
+// 注册全局自定义指令
 import * as directives from '@/directive'
 Object.keys(directives).forEach(key => {
   Vue.directive(key, directives[key])
+})
+
+// 全局注册过滤器
+import * as filters from '@/filters'
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
 })
 
 // set ElementUI lang to EN

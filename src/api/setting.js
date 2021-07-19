@@ -3,7 +3,7 @@ import request from '@/utils/request'
 /**
  * 获取角色列表
  **/
- export function getRoleListApi(params) {
+export function getRoleListApi(params) {
   return request({
     url: '/sys/role',
     params
@@ -13,7 +13,7 @@ import request from '@/utils/request'
 /**
  * 获取公司信息
  **/
- export function getCompanyInfoApi(companyId) {
+export function getCompanyInfoApi(companyId) {
   return request({
     url: `/company/${companyId}`
   })
@@ -23,7 +23,7 @@ import request from '@/utils/request'
  *  删除角色
  *
  **/
- export function deleteRoleApi(id) {
+export function deleteRoleApi(id) {
   return request({
     url: `/sys/role/${id}`,
     method: 'delete'
@@ -33,7 +33,7 @@ import request from '@/utils/request'
 /**
  * 修改角色
  **/
- export function updateRoleApi(data) {
+export function updateRoleApi(data) {
   return request({
     url: `/sys/role/${data.id}`,
     data,
@@ -53,7 +53,7 @@ export function getRoleDetailApi(id) {
 /**
  * 新增角色
  **/
- export function addRoleApi(data) {
+export function addRoleApi(data) {
   return request({
     url: '/sys/role',
     data,

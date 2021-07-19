@@ -6,7 +6,7 @@ import 'nprogress/nprogress.css'
 const whiteList = ['/login', '/404'] // 定义白名单  所有不受权限控制的页面
 
 // 路由前置守卫
-router.beforeEach(function(to, from, next) {
+router.beforeEach(async function(to, from, next) {
   NProgress.start()
   // 有token
   if (store.getters.token) {
@@ -16,7 +16,7 @@ router.beforeEach(function(to, from, next) {
     } else {
       // 如果用户信息不存在的话 去 获取用户信息
       if (!store.getters.userName) {
-        store.dispatch('user/getUserInfo')
+        await store.dispatch('user/getUserInfo')
       }
       next()
     }
