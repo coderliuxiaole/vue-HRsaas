@@ -1,7 +1,7 @@
 <template>
   <el-dialog title="新增员工" :visible="showDialog">
     <!-- 表单 -->
-    <el-form :model="formData" :rules="rules" label-width="120px" ref="addEmployee">
+    <el-form ref="addEmployee" :model="formData" :rules="rules" label-width="120px">
       <el-form-item label="姓名" prop="username">
         <el-input v-model="formData.username" style="width:50%" placeholder="请输入姓名" />
       </el-form-item>
@@ -12,7 +12,7 @@
         <el-date-picker v-model="formData.timeOfEntry" style="width:50%" placeholder="请选择日期" />
       </el-form-item>
 
-       <el-form-item label="聘用形式" prop="formOfEmployment">
+      <el-form-item label="聘用形式" prop="formOfEmployment">
         <el-select v-model="formData.formOfEmployment" style="width:50%" placeholder="请选择">
           <!-- 遍历只能遍历组件的数据 -->
           <el-option v-for="item in EmployeeEnum.hireType" :key="item.id" :label="item.value" :value="item.id" />
@@ -97,8 +97,8 @@ export default {
     }
   },
 
-   methods: {
-      async getDepartments() {
+  methods: {
+    async getDepartments() {
       this.showTree = true
       this.loading = true
       const { depts } = await getDepartmentsApi()
@@ -110,7 +110,7 @@ export default {
       this.formData.departmentName = node.name
       this.showTree = false
     },
-     // 点击确定时 校验整个表单
+    // 点击确定时 校验整个表单
     async btnOK() {
       try {
         await this.$refs.addEmployee.validate()

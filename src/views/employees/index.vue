@@ -7,7 +7,7 @@
 
         <!-- after插槽 -->
         <template slot="after">
-          <el-button size="small" type="warning">导入</el-button>
+          <el-button size="small" type="warning" @click="$router.push('/import')">导入</el-button>
           <el-button size="small" type="danger">导出</el-button>
           <el-button icon="plus" type="primary" size="small" @click="showDialog = true">新增员工</el-button>
         </template>
@@ -30,18 +30,18 @@
           <el-table-column label="账户状态" sortable="" prop="enableState">
             <template slot-scope="{ row }">
               <!-- 根据当前状态来确定 是否打开开关 -->
-              <el-switch :value="row.enableState === 1" @change="switchFn" />
+              <el-switch :value="row.enableState === 1" @change="switchFn(row)" />
             </template>
           </el-table-column>
           <el-table-column label="操作" sortable="" fixed="right" width="280">
-             <template slot-scope="{ row }">
+            <template slot-scope="{ row }">
               <el-button type="text" size="small">查看</el-button>
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
               <el-button type="text" size="small">角色</el-button>
               <el-button type="text" size="small" @click="deleteEmployee(row.id)">删除</el-button>
-            </template> 
+            </template>
           </el-table-column>
         </el-table>
         <!-- 分页组件 -->
@@ -66,13 +66,16 @@
 </template>
 
 <script>
-import { getEmployeesListApi, delEmployeeApi } from '@/api/employees'
+import { getEmployeesListApi, delEmployeeApi, editEmployeeApi } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees'
 
 // 弹出层
 import AddDemployee from './components/add-employee'
 export default {
   name: 'EmployeesIndex',
+  components: {
+    AddDemployee
+  },
   data() {
     return {
       list: [],
@@ -108,10 +111,25 @@ export default {
     },
 
     // 当用户状态按钮点击时的处理时间
-    switchFn() {
-      console.log(11)
+    async switchFn(obj) {
+      var data = {}
+      var msg = ''
+      // 判断用户当前状态
+      if (obj.enableState === 1) {
+        data = { ...obj, enableState: 0 }
+        msg = '用户状态已停用!'
+      } else {
+        data = { ...obj, enableState: 1 }
+        msg = '用户状态已启用!'
+      }
+      // 请求修改信息API
+      await editEmployeeApi(data)
+      this.$message.success(msg)
+      //  重新拉取数据
+      this.getEmployeesList()
     },
-     formatEmployment(row, column, cellValue, index) {
+
+    formatEmployment(row, column, cellValue, index) {
       // 要去找 1所对应的值
       console.log(cellValue)
       const obj = EmployeeEnum.hireType.find(item => item.id === cellValue)
@@ -119,9 +137,14 @@ export default {
     },
 
     // 删除员工方法
-     async deleteEmployee(id) {
+    async deleteEmployee(id) {
       try {
-        await this.$confirm('您确定删除该员工吗')
+        await this.$confirm('您确定要删除此员工吗?', '删除操作', {
+          confirmButtonText: '删除',
+          cancelButtonText: '取消',
+          roundButton: true,
+          type: 'warning'
+        })
         await delEmployeeApi(id)
         this.getEmployeesList()
         this.$message.success('删除员工成功')
@@ -129,9 +152,6 @@ export default {
         console.log(error)
       }
     }
-  },
-  components: {
-    AddDemployee
   }
 }
 </script>

@@ -47,6 +47,17 @@ export const constantRoutes = [
       meta: { title: '首页', icon: 'dashboard' }
     }]
   },
+  // 导入Excel的二级路由
+  {
+    path: '/import',
+    component: Layout,
+    children: [
+      {
+        path: '/import',
+        component: () => import('@/views/import')
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 

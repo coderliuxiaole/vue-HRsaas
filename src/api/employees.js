@@ -12,7 +12,7 @@ export function getEmployeesListApi(params) {
 /**
  * 删除员工接口
 **/
- export function delEmployeeApi(id) {
+export function delEmployeeApi(id) {
   return request({
     url: `/sys/user/${id}`,
     method: 'delete'
@@ -22,10 +22,32 @@ export function getEmployeesListApi(params) {
 /**
  *  新增员工的接口
  **/
- export function addEmployeeApi(data) {
+export function addEmployeeApi(data) {
   return request({
     method: 'post',
     url: '/sys/user',
+    data
+  })
+}
+
+/*
+ 修改员工接口
+*/
+export function editEmployeeApi(data) {
+  return request({
+    url: `/sys/user/${data.id}`,
+    method: 'PUT',
+    data
+  })
+}
+
+/*
+  导入员工接口
+*/
+export function importEmployeeApi(data) {
+  return request({
+    url: '/sys/user/batch',
+    method: 'post',
     data
   })
 }

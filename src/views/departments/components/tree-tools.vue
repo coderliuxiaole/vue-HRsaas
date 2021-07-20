@@ -67,7 +67,7 @@ export default {
         // 编辑部门
         this.$emit('editDepts', this.treeNode)
       } else if (type === 'del') {
-        this.$confirm('您确定要删除这个部门吗?')
+        await this.$confirm('您确定要删除这个部门吗?')
         // 捕获用户取消操作
           .catch(() => {
             console.log('用户取消了删除操作!')
