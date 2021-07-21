@@ -5,7 +5,7 @@
 <script>
 import { importEmployeeApi } from '@/api/employees'
 export default {
-  data () {
+  data() {
     return {
       type: this.$route.query.type
     }
@@ -32,7 +32,7 @@ export default {
       this.$message.success('导入员工数据成功!')
       this.$router.back()
     },
-      exportData() {
+    exportData() {
       const headers = {
         '姓名': 'username',
         '手机号': 'mobile',

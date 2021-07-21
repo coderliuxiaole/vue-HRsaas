@@ -1,6 +1,7 @@
 <template>
   <div class="dashboard-container">
     首页
+    <image-upload />
   </div>
 </template>
 

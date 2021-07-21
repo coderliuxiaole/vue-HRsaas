@@ -1,5 +1,5 @@
 <template>
-<div class="job-info">
+  <div class="job-info">
     <!-- 基础信息 -->
     <el-form label-width="220px">
       <div class="block">
@@ -164,7 +164,7 @@ export default {
     return {
       userId: this.$route.params.id,
       depts: [],
-      EmployeeEnum,
+      EmployeeEnum: '',
       formData: {
         adjustmentAgedays: '', // 调整司龄天
         adjustmentOfLengthOfService: '', // 调整工龄天
