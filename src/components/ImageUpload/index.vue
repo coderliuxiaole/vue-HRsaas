@@ -69,12 +69,10 @@ export default {
     },
     // 图片选中
     imgChange(file, fileList) {
-      this.fileList.push(fileList)
-      console.log(this.fileList)
+      this.fileList = [...fileList]
     },
     // 文件上传前
     beforeUpload(file) {
-      console.log(file)
       const types = ['image/jpeg', 'image/gif', 'image/bmp', 'image/png']
       // 校验格式
       if (!types.includes(file.type)) {
@@ -103,10 +101,18 @@ export default {
         }
       }, (err, data) => {
         if (!err && data.statusCode === 200) {
+          // 替换图片src地址
+          this.fileList = this.fileList.map(item => {
+            if (item.uid === this.currentFileUid) {
+              return { url: 'http://' + data.Location, upload: true }
+            }
+            return item
+          })
+          // 提示文本
           this.$message.success('图片上传成功!')
         }
         // 关闭上传展示
-        this.showPercent = true
+        this.showPercent = false
       })
     }
   }

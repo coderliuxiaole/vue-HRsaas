@@ -44,7 +44,8 @@ export default {
   },
   data() {
     return {
-
+      userComponent: userComponent,
+      JobInfo: JobInfo
     }
   },
 
