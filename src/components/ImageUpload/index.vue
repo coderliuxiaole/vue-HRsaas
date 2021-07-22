@@ -5,7 +5,7 @@
       :limit="1"
       action="#"
       :on-preview="imgPreview"
-      :file-list="fileList"
+      :file-yarnlist="fileList"
       :on-remove="imgRemove"
       :on-change="imgChange"
       :before-upload="beforeUpload"
