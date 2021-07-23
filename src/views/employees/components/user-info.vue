@@ -286,6 +286,10 @@
 <script>
 import EmployeeEnum from '@/api/constant/employees'
 
+// 获取用户详细接口
+import { getPersonalDetailApi } from '@/api/employees'
+// 获取用户基本信息接口
+import { getUserDetailByIdApi } from '@/api/user'
 export default {
   data() {
     return {
@@ -356,6 +360,24 @@ export default {
         remarks: '' // 备注
       }
     }
+  },
+  created() {
+    this.getUserInfo()
+  },
+  methods: {
+    saveUser() {
+
+    },
+    savePersonal() {
+
+    },
+    // 获取用户详细信息
+    async getUserInfo() {
+      this.formData = await getPersonalDetailApi(this.userId)
+      this.userInfo = await getUserDetailByIdApi(this.userId)
+    },
+    // 保存用户详细信息
+    saveUserInfo() {}
   }
 }
 </script>

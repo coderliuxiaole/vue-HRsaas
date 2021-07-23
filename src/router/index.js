@@ -58,6 +58,7 @@ export const constantRoutes = [
       }
     ]
   },
+  // 打印路由
   { path: '*', redirect: '/404', hidden: true }
 ]
 

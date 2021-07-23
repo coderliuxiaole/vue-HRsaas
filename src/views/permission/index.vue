@@ -1,9 +1,12 @@
 <template>
   <div class="dashboard-container">
     <div class="app-container">
-      <h2>
-        权限管理
-      </h2>
+      <!-- 右侧按钮 -->
+      <page-tools>
+        <el-button slot="after" type="primary" size="small">添加权限</el-button>
+      </page-tools>
+      <!-- 表格 -->
+      <el-table />
     </div>
   </div>
 </template>

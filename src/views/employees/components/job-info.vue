@@ -159,6 +159,7 @@
 </template>
 
 <script>
+import { getJobDetailApi } from '@/api/employees'
 export default {
   data() {
     return {
@@ -194,6 +195,18 @@ export default {
         workingTimeForTheFirstTime: '' // 首次参加工作时间
       }
     }
+  },
+  created() {
+    this.getUserJobInfo()
+  },
+  methods: {
+    saveJob() {},
+    // 获取用户信息
+    async getUserJobInfo() {
+      this.formData = await getJobDetailApi(this.userId)
+    },
+    // 保存用户工作信息
+    saveUserJobInfo() {}
   }
 }
 </script>
