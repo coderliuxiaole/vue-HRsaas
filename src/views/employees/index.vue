@@ -4,6 +4,7 @@
       <page-tools>
         <!-- before 插槽 -->
         <span slot="before">共166条记录</span>
+
         <!-- after插槽 -->
         <template slot="after">
           <el-button size="small" type="warning" @click="$router.push('/import')">导入</el-button>
@@ -27,7 +28,6 @@
                 :src="row.staffPhoto "
                 style="border-radius: 50%; width: 100px; height: 100px; padding: 10px"
                 alt=""
-                @click="showQcCode(row.staffPhoto)"
               >
             </template>
           </el-table-column>
@@ -73,32 +73,19 @@
 
     <!-- 弹出层 -->
     <add-demployee :show-dialog.sync="showDialog" />
-
-    <!-- 二维码 -->
-    <el-dialog :visible.sync="showCodeDialog" title="二维码">
-      <el-row type="flex" justify="center">
-        <canvas ref="erweimaImg" />
-      </el-row>
-    </el-dialog>
-
-    <!-- 分配角色弹出层  -->
-    <assign-role :show-role-dialog="showRoleDialog" />
   </div>
 </template>
 
 <script>
 import { getEmployeesListApi, delEmployeeApi, editEmployeeApi } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees'
-import QrCode from 'qrcode'
-// 添加弹出层
+
+// 弹出层
 import AddDemployee from './components/add-employee'
-// 分配角色弹出层
-import AssignRole from './components/assign-role.vue'
 export default {
   name: 'EmployeesIndex',
   components: {
-    AddDemployee,
-    AssignRole
+    AddDemployee
   },
   data() {
     return {
@@ -109,9 +96,7 @@ export default {
         total: 0 // 总数
       },
       loadding: false,
-      showDialog: false,
-      showCodeDialog: false, // 二维码弹层
-      showRoleDialog: false // 权限弹出层
+      showDialog: false
     }
   },
   created() {
@@ -178,18 +163,6 @@ export default {
         console.log(error)
       }
     },
-    // 二维码
-    showQcCode(url) {
-      if (!url) {
-        this.$message.error('该用户还未上传头像!')
-        return false
-      }
-      this.showCodeDialog = true
-      this.$nextTick(() => {
-        QrCode.toCanvas(this.$refs.erweimaImg, url)
-        this.$message.success('二维码生成成功!')
-      })
-    },
     // 导出Excel
     exportData() {
       const headers = {
@@ -229,13 +202,17 @@ export default {
           // 需要判断 字段
           if (headers[key] === 'timeOfEntry' || headers[key] === 'correctionTime') {
             // 格式化日期
+            return formatDate(item[headers[key]])
           } else if (headers[key] === 'formOfEmployment') {
             const obj = EmployeeEnum.hireType.find(obj => obj.id === item[headers[key]])
             return obj ? obj.value : '未知'
           }
           return item[headers[key]]
         })
+        // ["132", '张三’， ‘’，‘’，‘’d]
       })
+      // return rows.map(item => Object.keys(headers).map(key => item[headers[key]]))
+      // 需要处理时间格式问题
     }
   }
 }
