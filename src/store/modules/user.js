@@ -50,7 +50,7 @@ const actions = {
     const userInfo = await getUserInfoApi()
     const userPhoto = await getUserPhoto(userInfo.userId)
     context.commit('setUserInfo', { ...userInfo, ...userPhoto })
-    // return
+    return userInfo
   },
 
   // 注销用户信息

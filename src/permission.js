@@ -16,7 +16,12 @@ router.beforeEach(async function(to, from, next) {
     } else {
       // 如果用户信息不存在的话 去 获取用户信息
       if (!store.getters.userName) {
-        await store.dispatch('user/getUserInfo')
+        const { roles } = await store.dispatch('user/getUserInfo')
+        // 如果用户信息存在的话 获取权限信息
+        const routes = await store.dispatch('permission/filterRouter', roles.menus)
+        console.log(routes)
+        router.addRoutes([...routes, { path: '*', redirect: '/404', hidden: true }])
+        next(to.path)
       }
       next()
     }

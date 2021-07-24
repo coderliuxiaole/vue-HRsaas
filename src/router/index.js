@@ -12,6 +12,7 @@ import settingRouter from './modules/setting'
 import socialRouter from './modules/social'
 
 Vue.use(Router)
+// 动态路由
 export const asyncRoutes = [
   approvalsRouter,
   departmentsRouter,
@@ -22,7 +23,7 @@ export const asyncRoutes = [
   settingRouter,
   socialRouter
 ]
-
+// 静态路由
 export const constantRoutes = [
   {
     path: '/login',
@@ -57,14 +58,12 @@ export const constantRoutes = [
         component: () => import('@/views/import')
       }
     ]
-  },
-  // 打印路由
-  { path: '*', redirect: '/404', hidden: true }
+  }
 ]
 
 const createRouter = () => new Router({
   scrollBehavior: () => ({ y: 0 }),
-  routes: [...constantRoutes, ...asyncRoutes]
+  routes: [...constantRoutes]
 })
 
 const router = createRouter()
