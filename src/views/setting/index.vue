@@ -16,7 +16,7 @@
               <el-table-column align="center" prop="description" label="描述" />
               <el-table-column align="center" label="操作">
                 <template slot-scope="{ row }">
-                  <el-button size="small" type="success">分配权限</el-button>
+                  <el-button size="small" type="success" @click="assignPerm(row.id)">分配权限</el-button>
                   <el-button size="small" type="primary" @click="editRole(row.id)">编辑</el-button>
                   <el-button size="small" type="danger" @click="deleteRole(row.id)">删除</el-button>
                 </template>
@@ -59,8 +59,9 @@
 
         </el-tabs>
       </el-card>
-
-      <el-dialog title="编辑弹层" :visible="showDialog" @close="btnCancel">
+      
+      <!-- 编辑角色弹层 -->
+      <el-dialog title="编辑角色" :visible="showDialog" @close="btnCancel">
         <el-form ref="roleForm" :model="roleForm" :rules="rules" label-width="120px">
           <el-form-item label="角色名称" prop="name">
             <el-input v-model="roleForm.name" />
@@ -77,6 +78,31 @@
           </el-col>
         </el-row>
       </el-dialog>
+
+      <!-- 分配权限弹层 -->
+      <el-dialog title="分配权限" :visible.sync="showPermDialog" @close="btnPermCancel">
+      <!-- 权限是一颗树 -->
+      <!-- 将数据绑定到组件上 -->
+      <!-- check-strictly 如果为true 那表示父子勾选时  不互相关联 如果为false就互相关联 -->
+      <!-- id作为唯一标识 -->
+      <el-tree
+        ref="permTree"
+        :data="permData"
+        :props="defaultProps"
+        :show-checkbox="true"
+        :check-strictly="true"
+        :default-expand-all="true"
+        :default-checked-keys="selectCheck"
+        node-key="id"
+      />
+      <!-- 确定 取消 -->
+      <el-row slot="footer" type="flex" justify="center">
+        <el-col :span="6">
+          <el-button type="primary" size="small" @click="btnPermOK">确定</el-button>
+          <el-button size="small" @click="btnPermCancel">取消</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
     </div>
   </div>
 </template>
@@ -84,9 +110,15 @@
 <script>
 import { getRoleListApi, getCompanyInfoApi, deleteRoleApi, getRoleDetailApi, updateRoleApi, addRoleApi } from '@/api/setting'
 import { mapGetters } from 'vuex'
+// 递归函数
+import { tranListToTreeData } from '@/utils'
+// 接口
+import { getPermissionListApi } from '@/api/permission'
+import { assignPermApi } from '@/api/setting'
 export default {
   data() {
     return {
+      showPermDialog: false, // 分配权限弹层
       list: [], // 承接数组
       page: {
         // 放置页码及相关数据
@@ -100,7 +132,13 @@ export default {
       roleForm: {},
       rules: {
         name: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }]
-      }
+      },
+      defaultProps: {
+        label: 'name'
+      },
+       permData: [], // 专门用来接收权限数据 树形数据
+      selectCheck: [], // 定义一个数组来接收 已经选中的节点
+      roleId: null // 用来记录分配角色的id
     }
   },
 
@@ -116,6 +154,7 @@ export default {
   },
 
   methods: {
+    // 获取数据
     async getRoleList() {
       const { total, rows } = await getRoleListApi(this.page)
       this.page.total = total
@@ -150,6 +189,7 @@ export default {
       this.roleForm = await getRoleDetailApi(id)
       this.showDialog = true // 为了不出现闪烁的问题 先获取数据 再弹出层
     },
+
     // 编辑和新增
     async btnOK() {
       try {
@@ -170,6 +210,7 @@ export default {
         console.log(error)
       }
     },
+
     // 表单取消
     btnCancel() {
       this.roleForm = {
@@ -179,6 +220,28 @@ export default {
       // 移除校验
       this.$refs.roleForm.resetFields()
       this.showDialog = false
+    },
+
+    // 分配权限
+    async assignPerm(id) {
+      this.permData = tranListToTreeData(await getPermissionListApi(), '0')
+      this.roleId = id
+      const { permIds } = await getRoleDetailApi(id) // permIds是当前角色所拥有的权限点数据
+      this.selectCheck = permIds // 将当前角色所拥有的权限id赋值
+      this.showPermDialog = true
+    },
+
+    // 分配权限确定
+    async btnPermOK() {
+      await assignPermApi({ permIds: this.$refs.permTree.getCheckedKeys(), id: this.roleId })
+      this.$message.success('分配权限成功')
+      this.showPermDialog = false
+    },
+
+    // 分配权限取消
+    btnPermCancel() {
+      this.selectCheck = [] // 重置数据
+      this.showPermDialog = false
     }
   }
 }

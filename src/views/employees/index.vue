@@ -28,6 +28,7 @@
                 :src="row.staffPhoto "
                 style="border-radius: 50%; width: 100px; height: 100px; padding: 10px"
                 alt=""
+                @click="showImgDialog(row.staffPhoto)"
               >
             </template>
           </el-table-column>
@@ -50,7 +51,7 @@
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small">角色</el-button>
+              <el-button type="text" size="small" @click="editRole(row.id)">角色</el-button>
               <el-button type="text" size="small" @click="deleteEmployee(row.id)">删除</el-button>
             </template>
           </el-table-column>
@@ -73,6 +74,17 @@
 
     <!-- 弹出层 -->
     <add-demployee :show-dialog.sync="showDialog" />
+    <!-- 分配权限弹出层 -->
+    <edit-role ref="editRoleDom" :showRoleDialog.sync="showRoleDialog" :user-id="userId"/>
+     <!-- 头像二维码的弹层 -->
+    <el-dialog title="个人头像二维码" :visible.sync="imgShowDialog" >
+      <el-row type="flex" justify="center">
+        <canvas ref="myCanvas" />
+      </el-row>
+      <el-row type="flex" justify="center">
+        <el-button type="primary" size="small" @click="imgShowDialog = false">确定信息</el-button>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
@@ -80,12 +92,17 @@
 import { getEmployeesListApi, delEmployeeApi, editEmployeeApi } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees'
 
-// 弹出层
+// 添加出层
 import AddDemployee from './components/add-employee'
+// 分配权限弹出层
+import editRole from './components/assign-role.vue'
+// 二维码生产插件
+import QrCode from 'qrcode'
 export default {
   name: 'EmployeesIndex',
   components: {
-    AddDemployee
+    AddDemployee,
+    editRole
   },
   data() {
     return {
@@ -95,8 +112,11 @@ export default {
         size: 10,
         total: 0 // 总数
       },
+      userId: null,
       loadding: false,
-      showDialog: false
+      showDialog: false,  // 添加弹出层
+      showRoleDialog: false, // 分配角色弹出层
+      imgShowDialog: false // 头像二维码弹出层
     }
   },
   created() {
@@ -213,6 +233,23 @@ export default {
       })
       // return rows.map(item => Object.keys(headers).map(key => item[headers[key]]))
       // 需要处理时间格式问题
+    },
+    async editRole(id) {
+      this.userId = id
+      await this.$refs.editRoleDom.getUserDetailById(id)
+      this.showRoleDialog = true
+    },
+
+    // 显示头像二维码
+    showImgDialog(url) {
+      console.log(url)
+      if (!url) {
+        return this.$message.error('该用户还未上传头像!')
+      }
+      this.imgShowDialog = true
+      this.$nextTick(() => {
+         QrCode.toCanvas(this.$refs.myCanvas, url)
+      })
     }
   }
 }

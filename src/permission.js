@@ -17,6 +17,7 @@ router.beforeEach(async function(to, from, next) {
       // 如果用户信息不存在的话 去 获取用户信息
       if (!store.getters.userName) {
         const { roles } = await store.dispatch('user/getUserInfo')
+        console.log(roles)
         // 如果用户信息存在的话 获取权限信息
         const routes = await store.dispatch('permission/filterRouter', roles.menus)
         console.log(routes)

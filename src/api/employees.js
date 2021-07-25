@@ -103,3 +103,14 @@ export function updateJobApi(data) {
     data
   })
 }
+
+/** 
+  * 修改用户角色
+**/
+export function assignRolesApi(data) {
+  return request({
+    url: '/sys/user/assignRoles',
+    method: 'PUT',
+    data
+  })
+}

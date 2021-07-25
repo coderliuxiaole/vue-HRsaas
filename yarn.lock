@@ -8758,8 +8758,8 @@ q@^1.1.2:
 
 qrcode@^1.4.4:
   version "1.4.4"
-  resolved "https://registry.nlark.com/qrcode/download/qrcode-1.4.4.tgz#f0c43568a7e7510a55efc3b88d9602f71963ea83"
-  integrity sha1-8MQ1aKfnUQpV78O4jZYC9xlj6oM=
+  resolved "https://registry.yarnpkg.com/qrcode/-/qrcode-1.4.4.tgz#f0c43568a7e7510a55efc3b88d9602f71963ea83"
+  integrity sha512-oLzEC5+NKFou9P0bMj5+v6Z40evexeE29Z9cummZXZ9QXyMr3lphkURzxjXgPJC5azpxcshoDWV1xE46z+/c3Q==
   dependencies:
     buffer "^5.4.3"
     buffer-alloc "^1.2.0"
